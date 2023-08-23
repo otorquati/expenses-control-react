@@ -37,6 +37,29 @@ describe('ValidationError', () => {
             value='anyValue'
             />);
             
-        expect(screen.queryByTestId('error')).not.toBeNull();        
+        expect(screen.queryByTestId('error')).toBeNull();        
+    })
+    test('given error is email, when value is invalid, then return error', () => {
+        render(<ValidationError
+            errorMessage='anyErrorMessage'
+            hasChanged={true}
+            testId='error'
+            type='email'
+            value='invalid'
+        />);
+
+        expect(screen.getByTestId('error')).not.toBeNull();
+    })
+
+    test('given error is email, when value is valid, then return null', () => {
+        render(<ValidationError
+            errorMessage='anyErrorMessage'
+            hasChanged={true}
+            testId='error'
+            type='email'
+            value='valid@email.com'
+        />);
+
+        expect(screen.queryByTestId('error')).toBeNull();
     })
 })
