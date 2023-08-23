@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
@@ -19,26 +19,27 @@ function App() {
 
   return (
     <main className='centralize'>
-      <form action="">
+      <form>
         <input type="email" placeholder='Email' value={form.email.value} 
         onChange={event => setForm({...form, email: {
           hasChanged: true, value: event.target.value 
         }})}
-        data-testid='email' />
-        { 
-          form.email.hasChanged && !isEmailValid(form.email.value) 
-          && <div data-testid="email-invalid">Email é inválido</div>
-        }
+        data-testid='email'
+        />
         { 
           form.email.hasChanged && !form.email.value 
           && <div data-testid="email-required">Email é obrigatório</div>
         }
+        { 
+          form.email.hasChanged && !isEmailValid(form.email.value) 
+          && <div data-testid="email-invalid">Email é inválido</div>
+        }
         
         <input type="password" placeholder='Senha' value={form.password.value} 
-          onChange={event => setForm({...form, password: {
-          hasChanged: true, value: event.target.value }})}
-          data-testid='password' 
-          />
+        onChange={event => setForm({...form, password: {
+          hasChanged: true, value: event.target.value 
+        }})}
+          data-testid="password"          />
         { 
         form.password.hasChanged && !form.password.value 
           && <div data-testid="password-required">Senha é obrigatória</div>
