@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ValidationError from './ValidationError';
+import {isEmailValid} from '../../helpers/EmailHelper';
 
 describe('ValidationError', () => {
     test('given value has not changed, then return null', () => {
@@ -39,6 +40,7 @@ describe('ValidationError', () => {
             
         expect(screen.queryByTestId('error')).toBeNull();        
     })
+
     test('given error is email, when value is invalid, then return error', () => {
         render(<ValidationError
             errorMessage='anyErrorMessage'
