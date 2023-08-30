@@ -3,8 +3,13 @@ import {isEmailValid} from './../../helpers/EmailHelper';
 import ValidationError from './../../components/ValidationError/ValidationError';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
+import AuthService from '../../services/AuthService';
 
-function LoginPage() {
+type LoginPageProps = {
+  authService: AuthService;
+}
+
+function LoginPage( props: LoginPageProps) {
   const [form, setForm] = useState({
     email: {
       hasChanged: false,
@@ -15,6 +20,19 @@ function LoginPage() {
       value: ""
     }
   })
+
+  const [error, setError] = useState(null as any);
+
+  const login = () => {
+      props.authService.login(
+        form.email.value, form.password.value
+      ).then(()=> {
+        navigate('/home');
+      }).catch(error => {
+        setError(error);
+      });
+  }
+
   const navigate = useNavigate(); 
   const goToRegisterPage = () => {
         navigate('/register');
@@ -56,13 +74,22 @@ function LoginPage() {
           type='required'
           value={form.password.value}
            />
-        <button type='button' className='clear'
+        
+        {error && <div className='error' data-testid="error">
+          {error.message}
+          </div>
+          }
+
+        <button type='button' 
+          className='clear'
           data-testid = "recover-password-button"
           disabled = {!isEmailValid(form.email.value)}>
           Recuperar senha</button>
+
         <button type='button' className='solid'
           data-testid="login-button"
           disabled = {!isEmailValid(form.email.value) || !form.password.value}
+          onClick={login}
           >Entrar
         </button>
         <button 
