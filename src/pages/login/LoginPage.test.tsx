@@ -151,54 +151,80 @@ describe('Login', () => {
       expect(window.location.pathname).toEqual('/register');
     })
 
-    test('given user clicks on login button, then call login', async () => {
-      authService.response = Promise.resolve({} as any);
-      renderLoginPage();
+    describe('given user clicks on login button', () => {
+      test('then call login', async () => {
+        authService.response = Promise.resolve({} as any);
+    
 
+        renderPageAndTryToLogin();
+
+        await waitFor( () => expect(authService.isLoggingIn).toBeTruthy());
+
+      })
+
+      test('then show Loading', async () => {
+        authService.response = Promise.resolve({} as any);
+
+        renderPageAndTryToLogin();
+
+        expect(await screen.findByTestId('loading')).not.toBeNull();
+
+      })
+
+
+      test('when success, then hide loading', async () => {
+        authService.response = Promise.resolve({} as any);
+
+        renderPageAndTryToLogin();
+
+        await waitFor(() => expect(screen.queryByTestId('loading')).toBeNull());
+
+      })
+
+      test('when success, then go to home page', async () => {
+        authService.response = Promise.resolve({} as any);
+
+        renderPageAndTryToLogin();
+
+        await waitFor( () => expect(window.location.pathname).toEqual('/home'));
+
+      })
+
+      test('when fail, then show error message', async () => {
+        authService.response = Promise.reject({message: "error"});
+        renderPageAndTryToLogin();
+
+        expect(await screen.findByTestId('error')).not.toBeNull();
+
+      })
+
+      test('when fail, then hide loading', async () => {
+        authService.response = Promise.reject({message: "error"});
+        renderPageAndTryToLogin();
+
+        await waitFor( () => expect(screen.queryByTestId('loading')).toBeNull());
+
+      })
+
+      function renderPageAndTryToLogin() {
+        renderLoginPage();
+        fillFormatValidaValues();
+        clickOnLoginButton();
+      }
+  })
+  
+
+    function fillFormatValidaValues() {
       const email = screen.getByTestId('email');
       userEvent.type(email,"valid@email.com");
       const password = screen.getByTestId('password');
       userEvent.type(password, "anyValue");
+    }
 
+    function clickOnLoginButton() {
       const loginButton = screen.getByTestId('login-button');
       userEvent.click(loginButton);
-
-      await waitFor( () => expect(authService.isLoggingIn).toBeTruthy());
-
-    })
-
-    test('given user clicks on login button, when success, then go to home', async () => {
-      authService.response = Promise.resolve({} as any);
-
-      renderLoginPage();
-
-      const email = screen.getByTestId('email');
-      userEvent.type(email,"valid@email.com");
-      const password = screen.getByTestId('password');
-      userEvent.type(password, "anyValue");
-
-      const loginButton = screen.getByTestId('login-button');
-      userEvent.click(loginButton);
-
-      await waitFor( () => expect(window.location.pathname).toEqual('/home'));
-
-    })
-
-    test('given user clicks on login button, when fail, then show error message', async () => {
-      authService.response = Promise.reject({message: "error"});
-      renderLoginPage();
-
-      const email = screen.getByTestId('email');
-      userEvent.type(email,"valid@email.com");
-      const password = screen.getByTestId('password');
-      userEvent.type(password, "anyValue");
-
-      const loginButton = screen.getByTestId('login-button');
-      userEvent.click(loginButton);
-
-      expect(await screen.findByTestId('error')).not.toBeNull();
-
-    })
+    }
 
     function renderLoginPage() {
       render(

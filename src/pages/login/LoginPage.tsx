@@ -4,6 +4,7 @@ import ValidationError from './../../components/ValidationError/ValidationError'
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
+import Loading from '../../components/Loading/Loading';
 
 type LoginPageProps = {
   authService: AuthService;
@@ -22,13 +23,17 @@ function LoginPage( props: LoginPageProps) {
   })
 
   const [error, setError] = useState(null as any);
+  const [showLoading, setShowLoading] = useState(false);
 
   const login = () => {
+      setShowLoading(true);
       props.authService.login(
         form.email.value, form.password.value
       ).then(()=> {
+        setShowLoading(false);
         navigate('/home');
       }).catch(error => {
+        setShowLoading(false);
         setError(error);
       });
   }
@@ -100,6 +105,7 @@ function LoginPage( props: LoginPageProps) {
             Registrar
         </button>
       </form>
+      { showLoading && <Loading /> }
     </main>
   );
 }
