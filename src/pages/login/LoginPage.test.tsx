@@ -213,6 +213,94 @@ describe('Login', () => {
       }
   })
   
+  // Bateria de teste para Funcionalidade Recuperar Senha
+  describe('given user clicks on recover password button', () => {
+    test('then call recover password', () => {
+      authService.response = new Promise(() => {});
+
+      renderLoginPage();
+
+      const email = screen.getByTestId('email');
+      userEvent.type(email,'valid@email.com');
+      const recoverPasswordButton = screen.getByTestId('recover-password-button');
+      userEvent.click(recoverPasswordButton);
+
+      expect(authService.isRecoveringPassword).toBeTruthy();
+    })
+    test('then show loading', async () => {
+      authService.response = new Promise(() => {});
+
+      renderLoginPage();
+
+      const email = screen.getByTestId('email');
+      userEvent.type(email,'valid@email.com');
+      const recoverPasswordButton = screen.getByTestId('recover-password-button');
+      userEvent.click(recoverPasswordButton);
+
+      expect(await screen.findByTestId('loading')).not.toBeNull();
+    })
+
+    test('when success, the show success message', async () => {
+      authService.response = Promise.resolve({});
+
+      renderLoginPage();
+
+      const email = screen.getByTestId('email');
+      userEvent.type(email,'valid@email.com');
+      const recoverPasswordButton = screen.getByTestId('recover-password-button');
+      userEvent.click(recoverPasswordButton);
+
+      expect(await screen.findByTestId('recover-password-success-message'))
+      .not.toBeNull();
+    })
+    test('when success, the hide loading', async () => {
+      authService.response = Promise.resolve({});
+
+      renderLoginPage();
+
+      const email = screen.getByTestId('email');
+      userEvent.type(email,'valid@email.com');
+      const recoverPasswordButton = screen.getByTestId('recover-password-button');
+      userEvent.click(recoverPasswordButton);
+
+      await waitFor(() => expect(screen.queryByTestId('loading'))
+      .toBeNull());
+    })
+
+    test('when fail, the show error message', async () => {
+      authService.response = Promise.reject({message: "error"});
+
+      renderLoginPage();
+
+      const email = screen.getByTestId('email');
+      userEvent.type(email,'valid@email.com');
+      const recoverPasswordButton = screen.getByTestId('recover-password-button');
+      userEvent.click(recoverPasswordButton);
+
+      expect(await screen.findByTestId('error'))
+      .not.toBeNull();
+    })
+
+    test('when fail, the hide loading', async () => {
+      authService.response = Promise.reject({message: "error"});
+
+      renderLoginPage();
+
+      const email = screen.getByTestId('email');
+      userEvent.type(email,'valid@email.com');
+      const recoverPasswordButton = screen.getByTestId('recover-password-button');
+      userEvent.click(recoverPasswordButton);
+
+      await waitFor(() => expect(screen.queryByTestId('loading'))
+      .toBeNull());
+    })
+  })
+
+  test('given page starts, the hide recover password success message', () => {
+    renderLoginPage();
+
+    expect(screen.queryByTestId('recover-password-success-message')).toBeNull();
+  })
 
     function fillFormatValidaValues() {
       const email = screen.getByTestId('email');
@@ -241,9 +329,14 @@ describe('Login', () => {
     // Elemento que  simula o código real que faz a chamada ao Firebase
     class authServiceMock {
       isLoggingIn = false;
+      isRecoveringPassword = false;
       response: any;
       login() {
         this.isLoggingIn = true;
+        return this.response;
+      }
+      recoverPassword(){
+        this.isRecoveringPassword = true;
         return this.response;
       }
     }
