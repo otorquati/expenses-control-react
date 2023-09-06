@@ -14,4 +14,7 @@ export default class AuthService {
             return Promise.reject(error);
         });        
     }
+    recoverPassword(email: string ) {
+      return firebaseAuth.sendPasswordResetEmail(auth, email);
+    }
 }
