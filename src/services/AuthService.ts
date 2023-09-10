@@ -15,7 +15,8 @@ export default class AuthService {
     login(email: string, password: string) {
         return firebaseAuth.signInWithEmailAndPassword(
             auth, email, password
-          ).then(user => { 
+          )
+          .then(user => { 
             console.log(user)
             return user;
           })
@@ -24,6 +25,11 @@ export default class AuthService {
             return Promise.reject(error);
         });        
     }
+
+    logout() {
+      return firebaseAuth.signOut(auth);
+    }
+    
     recoverPassword(email: string ) {
       return firebaseAuth.sendPasswordResetEmail(auth, email);
     }

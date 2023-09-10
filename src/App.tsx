@@ -1,3 +1,4 @@
+import './App.css';
 import LoginPage from './pages/login/LoginPage';
 import HomePage from './pages/home/HomePage';
 import RegisterPage from './pages/register/RegisterPage';
@@ -21,28 +22,43 @@ function App(props: AppProps) {
       setIsLoadingLoggedUser(false);
       setUser(user);
     })
-    .catch(error => {
+    .catch(() => {
       setIsLoadingLoggedUser(false);
     })
   }, []);
 
   return(
     <>
+    {
+      !isLoadingLoggedUser &&
       <BrowserRouter>
         <Routes>
           <Route 
             path='/' 
             element={
-              !user ? <LoginPage authService={new AuthService()}/>
-              :<Navigate to={'/home'} />
+              !user ? 
+              <LoginPage authService={props.authService} />
+              : <Navigate to={'/home'} />
             } />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/home' element={<HomePage />} />
+          <Route 
+            path='/register' 
+            element={
+              !user ? 
+              <RegisterPage />
+              : <Navigate to={'/home'} />
+          } />
+          <Route 
+            path='/home' 
+            element={
+            !user ? <HomePage authService={props.authService} />
+            : <Navigate to={'/'} />
+          } />
         </Routes>
       </BrowserRouter>
-      {isLoadingLoggedUser && <Loading />}
+      }
+      { isLoadingLoggedUser && <Loading />}
     </>
-  );
+  )
 }
 
 export default App;
