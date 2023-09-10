@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app';
 import * as firebaseAuth from 'firebase/auth'; 
+import { browserLocalPersistence } from 'firebase/auth';
 
 // Import the functions you need from the SDKs you need
 // TODO: Add SDKs for Firebase products that you want to use
@@ -18,4 +19,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 
-export const auth = firebaseAuth.initializeAuth(app);
+export const auth = firebaseAuth.initializeAuth(app, {
+  persistence: browserLocalPersistence
+});

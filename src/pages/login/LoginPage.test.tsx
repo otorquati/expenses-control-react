@@ -318,8 +318,10 @@ describe('Login', () => {
       render(
         <BrowserRouter>
         <Routes location={'/'}>
-          <Route path='/' 
-            element={<LoginPage authService={authService as authServiceMock} />} />
+          <Route 
+            path='/' 
+            element={  
+            <LoginPage authService={authService as any} />} />
           <Route path='/register' element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
