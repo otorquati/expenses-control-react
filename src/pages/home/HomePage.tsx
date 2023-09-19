@@ -3,19 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/Loading/Loading';
 import AuthService from '../../services/AuthService';
 import './HomePage.css';
+import { useAuthContext } from '../../context/auth/AuthContext';
 
 type HomePageProps = {
     authService: AuthService;
 }
 
-function HomePage(props: HomePageProps) {
-
+function HomePage() {
+    const {authService}: {authService: AuthService} = useAuthContext();
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const navigate = useNavigate();
 
     const logout = () => {
         setIsLoggingOut(true);
-        props.authService.logout().then(() => {
+        authService.logout().then(() => {
         setIsLoggingOut(false);
         navigate('/');
        }) 

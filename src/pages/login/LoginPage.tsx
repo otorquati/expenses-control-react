@@ -5,12 +5,14 @@ import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
 import Loading from '../../components/Loading/Loading';
+import { useAuthContext } from '../../context/auth/AuthContext';
 
 type LoginPageProps = {
   authService: AuthService;
 }
 
-function LoginPage( props: LoginPageProps) {
+function LoginPage() {
+  const {authService}: {authService: AuthService} = useAuthContext();
   const [form, setForm] = useState({
     email: {
       hasChanged: false,
@@ -34,7 +36,7 @@ function LoginPage( props: LoginPageProps) {
   const login = () => {
       startLoadingService();
 
-      props.authService.login(
+      authService.login(
         form.email.value, form.password.value
       ).then(()=> {
         setShowLoading(false);
@@ -47,7 +49,7 @@ function LoginPage( props: LoginPageProps) {
   const recoverPassword = () => {
     startLoadingService();
 
-    props.authService.recoverPassword(
+    authService.recoverPassword(
       form.email.value
     ).then(() => {
       setShowRecoverPasswordMessage(true);

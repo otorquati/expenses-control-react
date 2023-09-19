@@ -6,7 +6,6 @@ export default class AuthService {
     getLoggedUser() {
       return new Promise(resolve => {
         firebaseAuth.onAuthStateChanged(auth, (user: any) => {
-          console.log(user);
           resolve(user);
         })
       })

@@ -6,26 +6,15 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import AuthService from './services/AuthService';
 import Loading from './components/Loading/Loading';
 import { useEffect, useState } from 'react';
+import { useAuthContext } from './context/auth/AuthContext';
 
 type AppProps = {
   authService: AuthService;
 }
 
-function App(props: AppProps) {
-  
-  const [isLoadingLoggedUser, setIsLoadingLoggedUser] =useState(true);
-  const [user, setUser] = useState(null as any);
+function App() {
 
-  useEffect(() => {
-    props.authService.getLoggedUser()
-    .then(user => {
-      setIsLoadingLoggedUser(false);
-      setUser(user);
-    })
-    .catch(() => {
-      setIsLoadingLoggedUser(false);
-    })
-  }, []);
+  const { isLoadingLoggedUser, user } = useAuthContext();
 
   return(
     <>
@@ -37,7 +26,7 @@ function App(props: AppProps) {
             path='/' 
             element={
               !user ? 
-              <LoginPage authService={props.authService} />
+              <LoginPage />
               : <Navigate to={'/home'} />
             } />
           <Route 
@@ -50,7 +39,7 @@ function App(props: AppProps) {
           <Route 
             path='/home' 
             element={
-            !user ? <HomePage authService={props.authService} />
+            !user ? <HomePage />
             : <Navigate to={'/'} />
           } />
         </Routes>
