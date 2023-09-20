@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {isEmailValid} from './../../helpers/EmailHelper';
 import ValidationError from './../../components/ValidationError/ValidationError';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
 import Loading from '../../components/Loading/Loading';
+import { useAuthContext } from '../../context/auth/AuthContext';
 
 type LoginPageProps = {
   authService: AuthService;
 }
 
-function LoginPage( props: LoginPageProps) {
+function LoginPage() {
+  const {authService}: {authService: AuthService} = useAuthContext();
   const [form, setForm] = useState({
     email: {
       hasChanged: false,
@@ -26,9 +28,15 @@ function LoginPage( props: LoginPageProps) {
   const [showLoading, setShowLoading] = useState(false);
   const [showRecoverPasswordMessage, setShowRecoverPasswordMessage] = useState(false);
 
+  const startLoadingService = () => {
+    setError(null);
+    setShowLoading(true);
+    setShowRecoverPasswordMessage(false);
+  }
   const login = () => {
-      setShowLoading(true);
-      props.authService.login(
+      startLoadingService();
+
+      authService.login(
         form.email.value, form.password.value
       ).then(()=> {
         setShowLoading(false);
@@ -39,8 +47,9 @@ function LoginPage( props: LoginPageProps) {
       });
   }
   const recoverPassword = () => {
-    setShowLoading(true);
-    props.authService.recoverPassword(
+    startLoadingService();
+
+    authService.recoverPassword(
       form.email.value
     ).then(() => {
       setShowRecoverPasswordMessage(true);
@@ -57,58 +66,67 @@ function LoginPage( props: LoginPageProps) {
   return (
     <main className='centralize'>
       <form>
-        <input type="email" placeholder='Email' value={form.email.value} 
-        onChange={event => setForm({...form, email: {
-          hasChanged: true, value: event.target.value 
-        }})}
-        data-testid='email'
-        />
+        <input 
+          type="email" 
+          placeholder='Email' 
+          value={form.email.value} 
+          onChange={event => setForm({...form, email: {
+            hasChanged: true, value: event.target.value 
+          }})}
+          data-testid='email' />
         <ValidationError
           hasChanged={form.email.hasChanged}
           errorMessage='Email é obrigatório'
           testId='email-required'
           type='required'
-          value={form.email.value}
-           />
-           <ValidationError
+          value={form.email.value} />
+        <ValidationError
           hasChanged={form.email.hasChanged}
           errorMessage='Email é inválido'
           testId='email-invalid'
           type='email'
-          value={form.email.value}
-           />
+          value={form.email.value}/>
          
-        <input type="password" placeholder='Senha' value={form.password.value} 
-        onChange={event => setForm({...form, password: {
+        <input 
+          type="password" 
+          placeholder='Senha' 
+          value={form.password.value} 
+          onChange={event => setForm({...form, password: {
           hasChanged: true, value: event.target.value 
-        }})}
+          }})}
           data-testid="password"
           />
           <ValidationError
-          hasChanged={form.password.hasChanged}
-          errorMessage='Email é obrigatório'
-          testId='password-required'
-          type='required'
-          value={form.password.value}
-           />
+            hasChanged={form.password.hasChanged}
+            errorMessage='senha é obrigatória'
+            testId='password-required'
+            type='required'
+            value={form.password.value} />
         
-        {error && <div className='error' data-testid="error">
-          {error.message}
-          </div>
+          {
+            error && 
+              <div 
+                className='error' 
+                data-testid="error">
+                {error.message}
+              </div>
           }
 
-        <button type='button' 
+        <button 
+          type='button' 
           className='clear'
           data-testid = "recover-password-button"
           disabled = {!isEmailValid(form.email.value)}
           onClick={recoverPassword}>
-          Recuperar senha</button>
-
-        <button type='button' className='solid'
+          Recuperar senha
+        </button>
+        <button 
+          type='button' 
+          className='solid'
           data-testid="login-button"
           disabled = {!isEmailValid(form.email.value) || !form.password.value}
-          onClick={login}
-          >Entrar
+          onClick={login}>
+          Entrar
         </button>
         <button 
             type='button' 
@@ -122,7 +140,7 @@ function LoginPage( props: LoginPageProps) {
       { 
         showRecoverPasswordMessage &&
         <div data-testid="recover-password-success-message">
-            Verifique sua caixa de email
+          Verifique sua caixa de email
         </div>
       }
     </main>

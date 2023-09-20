@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import AuthService from './services/AuthService';
+import AuthProvider from './context/auth/AuthProvider';
 
 
 // Import the functions you need from the SDKs you need
@@ -33,9 +34,12 @@ firebaseAuth.signInWithEmailAndPassword(auth, 'torquality.consulting@gmail.com',
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+  const authService = new AuthService();
 root.render(
   <React.StrictMode>
-    <App authService={new AuthService()}/>
+    <AuthProvider authService={authService}>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
 

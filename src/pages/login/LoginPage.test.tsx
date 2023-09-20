@@ -321,7 +321,7 @@ describe('Login', () => {
           <Route 
             path='/' 
             element={  
-            <LoginPage authService={authService as any} />} />
+            <LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
