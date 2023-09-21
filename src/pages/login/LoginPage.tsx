@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {isEmailValid} from './../../helpers/EmailHelper';
 import ValidationError from './../../components/ValidationError/ValidationError';
-import './LoginPage.css';
+import '../../global.css';
 import { useNavigate } from 'react-router-dom';
 import AuthService from '../../services/AuthService';
 import Loading from '../../components/Loading/Loading';

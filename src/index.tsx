@@ -7,7 +7,7 @@ import AuthService from './services/AuthService';
 import AuthProvider from './context/auth/AuthProvider';
 
 
-// Import the functions you need from the SDKs you need
+/* Import the functions you need from the SDKs you need
 import * as firebase from "firebase/app";
 import * as firebaseAuth from 'firebase/auth';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -29,7 +29,7 @@ const app = firebase.initializeApp(firebaseConfig);
 const auth = firebaseAuth.initializeAuth(app);
 firebaseAuth.signInWithEmailAndPassword(auth, 'torquality.consulting@gmail.com', '123456'
 ).then(user => console.log(user))
-.catch(error => console.log('error', error));
+.catch(error => console.log('error', error));*/
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
